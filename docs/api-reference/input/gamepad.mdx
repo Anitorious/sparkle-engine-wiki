@@ -1,0 +1,417 @@
+---
+title: Gamepad
+description: Gamepad/controller input handling including buttons, axes, and rumble effects
+sidebar_position: 4
+---
+
+# Gamepad Input
+
+Handle gamepad input including button presses, axis movement, and rumble effects.
+
+---
+
+- **Namespace:** Bliss.CSharp.Interact
+- **Type:** `static class`
+
+---
+
+## Features
+
+The gamepad input functionality provides:
+
+- **Device management** — Detect available gamepads and retrieve device names
+- **Button states** — Query gamepad button press, hold, and release states
+- **Axis movement** — Read analog stick and trigger positions
+- **Rumble effects** — Generate haptic feedback on connected gamepads
+
+## Device Management
+
+### GetAvailableGamepadCount
+
+```csharp
+public static uint GetAvailableGamepadCount()
+```
+
+Gets the count of available gamepads.
+
+**Returns:** The number of available gamepads
+
+**Example:**
+
+```csharp
+var gamepadCount = Input.GetAvailableGamepadCount();
+for (uint i = 0; i < gamepadCount; i++) {
+    RegisterGamepad(i);
+}
+```
+
+---
+
+### IsGamepadAvailable
+
+```csharp
+public static bool IsGamepadAvailable(uint gamepad)
+```
+
+Checks if the specified gamepad is available.
+
+**Parameters:**
+- `gamepad` — The index of the gamepad to check
+
+**Returns:** `true` if the gamepad is available; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsGamepadAvailable(0)) {
+    // Gamepad 0 is connected
+}
+```
+
+---
+
+### GetGamepadName
+
+```csharp
+public static string GetGamepadName(uint gamepad)
+```
+
+Gets the name of the specified gamepad.
+
+**Parameters:**
+- `gamepad` — The index of the gamepad
+
+**Returns:** The name of the specified gamepad
+
+**Example:**
+
+```csharp
+var gamepadName = Input.GetGamepadName(0);
+Console.WriteLine($"Connected: {gamepadName}");
+```
+
+---
+
+## Rumble Effects
+
+### RumbleGamepad
+
+```csharp
+public static void RumbleGamepad(
+    uint gamepad,
+    ushort lowFrequencyRumble,
+    ushort highFrequencyRumble,
+    uint durationMs)
+```
+
+Generates a rumble effect on the specified gamepad.
+
+**Parameters:**
+- `gamepad` — The index of the gamepad to rumble
+- `lowFrequencyRumble` — The intensity of the low-frequency rumble (0-65535)
+- `highFrequencyRumble` — The intensity of the high-frequency rumble (0-65535)
+- `durationMs` — Duration of the rumble effect in milliseconds
+
+**Example:**
+
+```csharp
+// Strong rumble for 200ms
+Input.RumbleGamepad(0, 65535, 65535, 200);
+
+// Weak rumble for 100ms
+Input.RumbleGamepad(0, 10000, 10000, 100);
+```
+
+---
+
+## Axis
+
+### GetGamepadAxisMovement
+
+```csharp
+public static float GetGamepadAxisMovement(uint gamepad, GamepadAxis axis)
+```
+
+Retrieves the movement value of the specified axis on the given gamepad.
+
+**Parameters:**
+- `gamepad` — The index of the gamepad
+- `axis` — The axis of the gamepad to check (see [`GamepadAxis`](#gamepadaxis))
+
+**Returns:** The movement value of the specified axis (typically -1.0 to 1.0)
+
+**Example:**
+
+```csharp
+var leftStickX = Input.GetGamepadAxisMovement(0, GamepadAxis.LeftX);
+var leftStickY = Input.GetGamepadAxisMovement(0, GamepadAxis.LeftY);
+player.Move(new Vector2(leftStickX, leftStickY));
+```
+
+---
+
+### GamepadAxis
+
+An enumeration representing all available gamepad axes for input detection.
+
+##### **Members**
+
+###### Analog Sticks
+
+| Axis | Value | Description |
+|------|-------|-------------|
+| `LeftX` | 0 | Left stick horizontal axis |
+| `LeftY` | 1 | Left stick vertical axis |
+| `RightX` | 2 | Right stick horizontal axis |
+| `RightY` | 3 | Right stick vertical axis |
+
+###### Triggers
+
+| Axis | Value | Description |
+|------|-------|-------------|
+| `TriggerLeft` | 4 | Left trigger axis |
+| `TriggerRight` | 5 | Right trigger axis |
+
+###### Special Values
+
+| Axis | Value | Description |
+|------|-------|-------------|
+| `Invalid` | -1 | Invalid axis |
+| `Max` | 6 | Maximum axis value (sentinel value) |
+
+#### **Example:**
+
+```csharp
+// Get analog stick movement
+var leftStickX = Input.GetGamepadAxisMovement(0, GamepadAxis.LeftX);
+var leftStickY = Input.GetGamepadAxisMovement(0, GamepadAxis.LeftY);
+player.Move(new Vector2(leftStickX, leftStickY));
+
+// Get right stick for camera control
+var cameraX = Input.GetGamepadAxisMovement(0, GamepadAxis.RightX);
+var cameraY = Input.GetGamepadAxisMovement(0, GamepadAxis.RightY);
+camera.Rotate(new Vector2(cameraX, cameraY));
+
+// Get trigger input
+var leftTrigger = Input.GetGamepadAxisMovement(0, GamepadAxis.TriggerLeft);
+var rightTrigger = Input.GetGamepadAxisMovement(0, GamepadAxis.TriggerRight);
+if (rightTrigger > 0.5f) {
+    Shoot();
+}
+```
+
+---
+
+## Button States
+
+### IsGamepadButtonPressed
+
+```csharp
+public static bool IsGamepadButtonPressed(uint gamepad, GamepadButton button)
+```
+
+Checks if the specified button on the given gamepad is pressed (frame of press).
+
+**Parameters:**
+- `gamepad` — The identifier of the gamepad to check
+- `button` — The button on the gamepad to check (see [`GamepadButton`](#gamepadbutton))
+
+**Returns:** `true` if the button is pressed; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsGamepadButtonPressed(0, GamepadButton.A)) {
+    player.Jump();
+}
+```
+
+---
+
+### IsGamepadButtonDown
+
+```csharp
+public static bool IsGamepadButtonDown(uint gamepad, GamepadButton button)
+```
+
+Checks if a specific gamepad button is currently pressed (held down).
+
+**Parameters:**
+- `gamepad` — The ID of the gamepad to check
+- `button` — The gamepad button to check (see [`GamepadButton`](#gamepadbutton))
+
+**Returns:** `true` if the button is pressed, otherwise `false`
+
+**Example:**
+
+```csharp
+if (Input.IsGamepadButtonDown(0, GamepadButton.X)) {
+    player.Charge();
+}
+```
+
+---
+
+### IsGamepadButtonReleased
+
+```csharp
+public static bool IsGamepadButtonReleased(uint gamepad, GamepadButton button)
+```
+
+Checks if the specified gamepad button is released (frame of release).
+
+**Parameters:**
+- `gamepad` — The gamepad identifier
+- `button` — The gamepad button to check (see [`GamepadButton`](#gamepadbutton))
+
+**Returns:** `true` if the specified gamepad button is released; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsGamepadButtonReleased(0, GamepadButton.X)) {
+    player.ReleaseCharge();
+}
+```
+
+---
+
+### IsGamepadButtonUp
+
+```csharp
+public static bool IsGamepadButtonUp(uint gamepad, GamepadButton button)
+```
+
+Checks if the specified gamepad button is not pressed.
+
+**Parameters:**
+- `gamepad` — The identifier of the gamepad
+- `button` — The gamepad button to check (see [`GamepadButton`](#gamepadbutton))
+
+**Returns:** `true` if the specified gamepad button is up; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsGamepadButtonUp(0, GamepadButton.A)) {
+    // Button is not pressed
+}
+```
+
+---
+
+### GamepadButton
+
+An enumeration representing all available gamepad buttons for input detection.
+
+#### **Members**
+
+##### Face Buttons
+
+| Button | Value | Description |
+|--------|-------|-------------|
+| `South` | 0 | The "South" face button (often the bottom button, typically labeled A or X) |
+| `East` | 1 | The "East" face button (often the right button, typically labeled B or Circle) |
+| `West` | 2 | The "West" face button (often the left button, typically labeled X or Square) |
+| `North` | 3 | The "North" face button (often the top button, typically labeled Y or Triangle) |
+
+##### Shoulder Buttons
+
+| Button | Value | Description |
+|--------|-------|-------------|
+| `LeftShoulder` | 9 | The left shoulder button |
+| `RightShoulder` | 10 | The right shoulder button |
+
+##### Analog Stick Buttons
+
+| Button | Value | Description |
+|--------|-------|-------------|
+| `LeftStick` | 7 | The left analog stick button (when pressed down) |
+| `RightStick` | 8 | The right analog stick button (when pressed down) |
+
+##### Directional Pad
+
+| Button | Value | Description |
+|--------|-------|-------------|
+| `DpadUp` | 11 | The directional pad "Up" button |
+| `DpadDown` | 12 | The directional pad "Down" button |
+| `DpadLeft` | 13 | The directional pad "Left" button |
+| `DpadRight` | 14 | The directional pad "Right" button |
+
+##### Menu Buttons
+
+| Button | Value | Description |
+|--------|-------|-------------|
+| `Back` | 4 | The "Back" button on the gamepad |
+| `Start` | 6 | The "Start" button on the gamepad |
+| `Guide` | 5 | The "Guide" button, often used to open system menus |
+
+##### Paddle Buttons
+
+| Button | Value | Description |
+|--------|-------|-------------|
+| `LeftPaddle1` | 17 | The first left paddle button |
+| `LeftPaddle2` | 19 | The second left paddle button |
+| `RightPaddle1` | 16 | The first right paddle button |
+| `RightPaddle2` | 18 | The second right paddle button |
+
+##### Special Buttons
+
+| Button | Value | Description |
+|--------|-------|-------------|
+| `Touchpad` | 20 | The touchpad button, commonly found on some controllers |
+| `Misc1` | 15 | A miscellaneous button (Misc1) |
+| `Misc2` | 21 | A miscellaneous button (Misc2) |
+| `Misc3` | 22 | A miscellaneous button (Misc3) |
+| `Misc4` | 23 | A miscellaneous button (Misc4) |
+| `Misc5` | 24 | A miscellaneous button (Misc5) |
+| `Misc6` | 25 | A miscellaneous button (Misc6) |
+
+##### Special Values
+
+| Button | Value | Description |
+|--------|-------|-------------|
+| `Invalid` | -1 | Represents an invalid button |
+| `Count` | 26 | Represents the total number of available buttons |
+
+#### **Example:**
+
+```csharp
+// Check face buttons
+if (Input.IsGamepadButtonPressed(0, GamepadButton.South)) {
+    player.Jump();
+}
+
+if (Input.IsGamepadButtonPressed(0, GamepadButton.East)) {
+    player.Interact();
+}
+
+// Check shoulder buttons
+if (Input.IsGamepadButtonDown(0, GamepadButton.LeftShoulder)) {
+    player.Aim();
+}
+
+// Check directional pad
+if (Input.IsGamepadButtonPressed(0, GamepadButton.DpadUp)) {
+    SelectWeapon(1);
+}
+
+// Check menu buttons
+if (Input.IsGamepadButtonPressed(0, GamepadButton.Start)) {
+    OpenPauseMenu();
+}
+
+// Check stick buttons
+if (Input.IsGamepadButtonPressed(0, GamepadButton.LeftStick)) {
+    player.Sprint();
+}
+```
+
+---
+
+## Related Documentation
+
+- [Overview](/api-reference/input/overview.mdx)
+- [Keyboard Input](/api-reference/input/keyboard.mdx)
+- [Mouse Input](/api-reference/input/mouse.mdx)
+- [Files & Clipboard](/api-reference/input/file-clipboard.mdx)

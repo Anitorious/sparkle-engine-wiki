@@ -6,7 +6,7 @@ sidebar_position: 1
 
 # 💫 Sparkle Engine 
 
-A fast, cross-platform .NET 8 C# 12 game engine.
+A fast, cross-platform .NET 10 C# 14 game engine.
 
 ## Features
 

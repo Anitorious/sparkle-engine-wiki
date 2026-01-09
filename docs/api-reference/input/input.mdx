@@ -1,0 +1,146 @@
+---
+title: Input
+description: Overview of the Bliss input system for handling keyboard, mouse, gamepad, and text input
+sidebar_position: 1
+---
+
+# Input
+
+The `Input` class is a static facade that provides a unified interface for handling all input devices in your application, including keyboard, mouse, gamepad, and clipboard operations.
+
+:::note
+
+`Input` abstracts away the underlying `IInputContext` implementation, allowing you to query input state at any point in your game loop without directly managing the context.
+
+:::
+
+---
+
+- **Namespace:** Bliss.CSharp.Interact
+- **Type:** `static class`
+
+---
+
+## Features
+
+The `Input` class provides a unified interface for:
+
+- **Keyboard input** — Key presses, releases, and text input
+- **Mouse input** — Position, movement, scrolling, and button states
+- **Gamepad support** — Axis movement, button states, and rumble effects
+- **Clipboard access** — Read and write system clipboard
+- **Cursor management** — Show/hide and set custom cursors
+- **Relative mouse mode** — Lock cursor for first-person games
+- **File drag-drop detection** — Detect files dropped onto the window
+
+## Usage
+
+```csharp
+public void Update() {
+    // Query input state here
+    if (Input.IsKeyPressed(KeyboardKey.W)) {
+        // Handle W key press
+    }
+}
+```
+
+:::info
+
+`Input.Init(...)`, `Input.Begin()` and `Input.End()` are called by the base `Game` class when executing the `Game.Run()`. If you are using the `Game` class to initialise your application, you do not need to call these manually.
+
+`Input.Begin()` and `Input.End()` are called each frame of the game loop to ensure proper synchronization with the input context.
+
+:::
+
+## Methods
+
+### Init
+
+```csharp
+public static void Init(IInputContext inputContext)
+```
+
+Initializes the Input class with the specified input context. Call this once at application startup before using any other Input methods.
+
+**Parameters:**
+- `inputContext` — The input context to initialize
+
+**Example:**
+
+```csharp
+using Bliss.CSharp.Interact;
+
+// Initialize with your input context implementation
+Input.Init(myInputContext);
+```
+
+---
+
+### Begin
+
+```csharp
+public static void Begin()
+```
+
+Begins input processing by interacting with the InputContext. This method should be called at the start of an input processing phase.
+
+**Example:**
+
+```csharp
+public void Update() {
+    Input.Begin();
+    
+    // Query input state here
+    
+    Input.End();
+}
+```
+
+---
+
+### End
+
+```csharp
+public static void End()
+```
+
+Finalizes the input handling for the current frame. Call this at the end of your input processing phase.
+
+**Example:**
+
+```csharp
+public void Update() {
+    Input.Begin();
+    
+    // Query input state here
+    
+    Input.End();
+}
+```
+
+---
+
+### Destroy
+
+```csharp
+public static void Destroy()
+```
+
+Destroys the Input context and releases any associated resources. Call this during application shutdown.
+
+**Example:**
+
+```csharp
+public void OnApplicationQuit() {
+    Input.Destroy();
+}
+```
+
+---
+
+## Related Documentation
+
+- [Keyboard Input](/api-reference/input/keyboard.mdx)
+- [Mouse Input](/api-reference/input/mouse.mdx)
+- [Gamepad Input](/api-reference/input/gamepad.mdx)
+- [Files & Clipboard](/api-reference/input/file-clipboard.mdx)

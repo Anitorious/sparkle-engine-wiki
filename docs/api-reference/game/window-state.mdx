@@ -1,0 +1,253 @@
+---
+title: WindowState
+description: Enum flags for configuring window behavior and appearance
+sidebar_position: 3
+---
+
+# WindowState
+
+The `WindowState` enum provides flags for configuring the behavior and appearance of the game window, including fullscreen mode, resizing, and visual properties.
+
+:::note
+
+`WindowState` is a flags enum, meaning multiple values can be combined using the bitwise OR operator (`|`) to create complex window configurations. For example, `WindowState.FullScreen | WindowState.Borderless` creates a fullscreen borderless window.
+
+:::
+
+---
+
+- **Namespace:** Bliss.CSharp.Windowing
+- **Type:** `[Flags] enum`
+
+---
+
+## Features
+
+The `WindowState` enum provides configuration for:
+
+- **Window modes** — Fullscreen, borderless, windowed, and hidden states
+- **Window sizing** — Resizable, maximized, and minimized states
+- **Visual properties** — Always-on-top, transparent, and high-DPI support
+- **Input handling** — Mouse capture for confined cursor movement
+
+## Usage
+
+```csharp
+using Bliss.CSharp.Windowing;
+
+var settings = new GameSettings {
+    // Single flag
+    WindowFlags = WindowState.Resizable
+};
+
+var settings = new GameSettings {
+    // Multiple flags combined
+    WindowFlags = WindowState.FullScreen | WindowState.Borderless
+};
+```
+
+---
+
+## Enum Values
+
+### None
+
+```csharp
+None = 0
+```
+
+Indicates that the window has no specific state. The window will use default platform-specific behavior.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.None
+};
+```
+
+---
+
+### Resizable
+
+```csharp
+Resizable = 1
+```
+
+The window is resizable, allowing the user to adjust its dimensions by dragging the window edges or corners.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.Resizable
+};
+```
+
+---
+
+### FullScreen
+
+```csharp
+FullScreen = 2
+```
+
+The window is in full-screen mode, occupying the entire screen with no visible task bar or other windows.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.FullScreen
+};
+```
+
+---
+
+### Borderless
+
+```csharp
+Borderless = FullScreen | Resizable (0x00000003)
+```
+
+The window is borderless, removing the title bar and window borders while maintaining windowed mode. This creates a "fake fullscreen" effect that can be faster to switch in/out of.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.Borderless
+};
+```
+
+---
+
+### Maximized
+
+```csharp
+Maximized = 4
+```
+
+The window is maximized, taking up the largest possible area on the screen while still showing the title bar and window borders.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.Maximized
+};
+```
+
+---
+
+### Minimized
+
+```csharp
+Minimized = Maximized | Resizable (0x00000005)
+```
+
+The window is minimized, reducing it to an icon in the taskbar or a minimized window button.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.Minimized
+};
+```
+
+---
+
+### Hidden
+
+```csharp
+Hidden = Maximized | FullScreen (0x00000006)
+```
+
+The window is hidden and not visible to the user. Useful for creating invisible windows or temporarily hiding the main window.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.Hidden
+};
+```
+
+---
+
+### CaptureMouse
+
+```csharp
+CaptureMouse = Hidden | Resizable (0x00000007)
+```
+
+The window captures the mouse, confining its movement to the window area. Useful for first-person games or when you need exclusive mouse control.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.CaptureMouse
+};
+```
+
+---
+
+### AlwaysOnTop
+
+```csharp
+AlwaysOnTop = 8
+```
+
+The window is always on top of other windows, maintaining its topmost position even when not focused.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.AlwaysOnTop
+};
+```
+
+---
+
+### Transparent
+
+```csharp
+Transparent = AlwaysOnTop | Resizable (0x00000009)
+```
+
+The window is transparent, allowing content behind it to be partially visible. Often combined with alpha blending in the renderer.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.Transparent
+};
+```
+
+---
+
+### HighPixelDensity
+
+```csharp
+HighPixelDensity = AlwaysOnTop | FullScreen (0x0000000A)
+```
+
+Enables rendering optimized for high-DPI (high pixel density) displays, such as Retina displays on macOS. The renderer will use the appropriate scaling factors automatically.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.HighPixelDensity
+};
+```
+
+---
+
+## Related Documentation
+
+- [GameSettings](/api-reference/gamesettings.mdx)

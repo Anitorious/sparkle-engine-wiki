@@ -1,0 +1,421 @@
+---
+title: Keyboard
+description: Keyboard input handling including key presses, releases, and text input
+sidebar_position: 2
+---
+
+# Keyboard Input
+
+Handle keyboard input through the `Input` class using key state queries.
+
+---
+
+- **Namespace:** Bliss.CSharp.Interact
+- **Type:** `static class`
+
+---
+
+## Features
+
+The keyboard input functionality provides:
+
+- **Key state queries** — Check if keys are pressed, held, or released
+- **Text input mode** — Capture typed text from the user
+- **Frame-based input** — Query input state synchronized with the game loop
+
+## Methods
+
+### IsKeyPressed
+
+```csharp
+public static bool IsKeyPressed(KeyboardKey key, bool enableRepeat = false)
+```
+
+Checks if the specified keyboard key was pressed in the current frame.
+
+**Parameters:**
+- `key` — The [KeyboardKey](#keyboardkey) to check
+- `enableRepeat` — If true, the key press will be considered a repeated action (default: `false`)
+
+**Returns:** `true` if the key was pressed; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsKeyPressed(KeyboardKey.Space)) {
+    player.Jump();
+}
+```
+
+---
+
+### IsKeyDown
+
+```csharp
+public static bool IsKeyDown(KeyboardKey key)
+```
+
+Checks if the specified keyboard key is currently pressed down (held).
+
+**Parameters:**
+- `key` — The [KeyboardKey](#keyboardkey) to check
+
+**Returns:** `true` if the key is held down; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsKeyDown(KeyboardKey.W)) {
+    player.MoveForward(deltaTime);
+}
+```
+
+---
+
+### IsKeyReleased
+
+```csharp
+public static bool IsKeyReleased(KeyboardKey key)
+```
+
+Checks if the specified keyboard key was released in the current frame.
+
+**Parameters:**
+- `key` — The [KeyboardKey](#keyboardkey) to check
+
+**Returns:** `true` if the key was released; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsKeyReleased(KeyboardKey.E)) {
+    inventory.Close();
+}
+```
+
+---
+
+### IsKeyUp
+
+```csharp
+public static bool IsKeyUp(KeyboardKey key)
+```
+
+Determines whether the specified key is currently up (not pressed).
+
+**Parameters:**
+- `key` — The [KeyboardKey](#keyboardkey) to check
+
+**Returns:** `true` if the key is up; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsKeyUp(KeyboardKey.LControl)) {
+    player.CanSprint = true;
+}
+```
+
+---
+
+### KeyboardKey
+
+An enumeration representing all available keyboard keys for input detection.
+
+#### **Members**
+
+##### Modifier Keys
+
+| Key | Description |
+|-----|-------------|
+| `ShiftLeft` | The left Shift key |
+| `ShiftRight` | The right Shift key |
+| `ControlLeft` | The left Control key |
+| `ControlRight` | The right Control key |
+| `AltLeft` | The left Alt key |
+| `AltRight` | The right Alt key |
+| `WinLeft` | The left Windows key |
+| `WinRight` | The right Windows key |
+| `Menu` | The Menu key, typically used to open context menus |
+
+##### Function Keys
+
+| Key | Description |
+|-----|-------------|
+| `F1` | Function key F1 |
+| `F2` | Function key F2 |
+| `F3` | Function key F3 |
+| `F4` | Function key F4 |
+| `F5` | Function key F5 |
+| `F6` | Function key F6 |
+| `F7` | Function key F7 |
+| `F8` | Function key F8 |
+| `F9` | Function key F9 |
+| `F10` | Function key F10 |
+| `F11` | Function key F11 |
+| `F12` | Function key F12 |
+| `F13` | Function key F13 |
+| `F14` | Function key F14 |
+| `F15` | Function key F15 |
+| `F16` | Function key F16 |
+| `F17` | Function key F17 |
+| `F18` | Function key F18 |
+| `F19` | Function key F19 |
+| `F20` | Function key F20 |
+| `F21` | Function key F21 |
+| `F22` | Function key F22 |
+| `F23` | Function key F23 |
+| `F24` | Function key F24 |
+| `F25` | Function key F25 |
+| `F26` | Function key F26 |
+| `F27` | Function key F27 |
+| `F28` | Function key F28 |
+| `F29` | Function key F29 |
+| `F30` | Function key F30 |
+| `F31` | Function key F31 |
+| `F32` | Function key F32 |
+| `F33` | Function key F33 |
+| `F34` | Function key F34 |
+| `F35` | Function key F35 |
+
+##### Navigation Keys
+
+| Key | Description |
+|-----|-------------|
+| `Up` | The Up arrow key |
+| `Down` | The Down arrow key |
+| `Left` | The Left arrow key |
+| `Right` | The Right arrow key |
+| `Home` | The Home key |
+| `End` | The End key |
+| `PageUp` | The Page Up key |
+| `PageDown` | The Page Down key |
+
+##### Standard Keys
+
+| Key | Description |
+|-----|-------------|
+| `Enter` | The Enter key |
+| `Escape` | The Escape key |
+| `Space` | The Spacebar key |
+| `Tab` | The Tab key |
+| `BackSpace` | The Backspace key |
+
+##### Special Keys
+
+| Key | Description |
+|-----|-------------|
+| `Insert` | The Insert key |
+| `Delete` | The Delete key |
+| `CapsLock` | The Caps Lock key |
+| `ScrollLock` | The Scroll Lock key |
+| `NumLock` | The Num Lock key |
+| `PrintScreen` | The Print Screen key |
+| `Pause` | The Pause key |
+| `Clear` | The Clear key |
+| `Sleep` | The Sleep key |
+
+##### Letter Keys
+
+| Key | Description |
+|-----|-------------|
+| `A` | Letter key A |
+| `B` | Letter key B |
+| `C` | Letter key C |
+| `D` | Letter key D |
+| `E` | Letter key E |
+| `F` | Letter key F |
+| `G` | Letter key G |
+| `H` | Letter key H |
+| `I` | Letter key I |
+| `J` | Letter key J |
+| `K` | Letter key K |
+| `L` | Letter key L |
+| `M` | Letter key M |
+| `N` | Letter key N |
+| `O` | Letter key O |
+| `P` | Letter key P |
+| `Q` | Letter key Q |
+| `R` | Letter key R |
+| `S` | Letter key S |
+| `T` | Letter key T |
+| `U` | Letter key U |
+| `V` | Letter key V |
+| `W` | Letter key W |
+| `X` | Letter key X |
+| `Y` | Letter key Y |
+| `Z` | Letter key Z |
+
+##### Number Keys
+
+| Key | Description |
+|-----|-------------|
+| `Number0` | Number key 0 |
+| `Number1` | Number key 1 |
+| `Number2` | Number key 2 |
+| `Number3` | Number key 3 |
+| `Number4` | Number key 4 |
+| `Number5` | Number key 5 |
+| `Number6` | Number key 6 |
+| `Number7` | Number key 7 |
+| `Number8` | Number key 8 |
+| `Number9` | Number key 9 |
+
+##### Numeric Keypad
+
+| Key | Description |
+|-----|-------------|
+| `Keypad0` | Numeric keypad key 0 |
+| `Keypad1` | Numeric keypad key 1 |
+| `Keypad2` | Numeric keypad key 2 |
+| `Keypad3` | Numeric keypad key 3 |
+| `Keypad4` | Numeric keypad key 4 |
+| `Keypad5` | Numeric keypad key 5 |
+| `Keypad6` | Numeric keypad key 6 |
+| `Keypad7` | Numeric keypad key 7 |
+| `Keypad8` | Numeric keypad key 8 |
+| `Keypad9` | Numeric keypad key 9 |
+| `KeypadDivide` | Numeric keypad divide key |
+| `KeypadMultiply` | Numeric keypad multiply key |
+| `KeypadMinus` | Numeric keypad minus key |
+| `KeypadPlus` | Numeric keypad plus key |
+| `KeypadDecimal` | Numeric keypad decimal point key |
+| `KeypadEnter` | Numeric keypad Enter key |
+
+##### Symbol Keys
+
+| Key | Description |
+|-----|-------------|
+| `Grave` | The Grave key, also known as the Tilde key |
+| `Minus` | The Minus key |
+| `Plus` | The Plus key |
+| `BracketLeft` | The left bracket key |
+| `BracketRight` | The right bracket key |
+| `Semicolon` | The Semicolon key |
+| `Quote` | The Quote key |
+| `Comma` | The Comma key |
+| `Period` | The Period key |
+| `Slash` | The Slash key |
+| `BackSlash` | The Backslash key |
+| `NonUsBackSlash` | The Non-US backslash key |
+
+##### Special Values
+
+| Key | Description |
+|-----|-------------|
+| `Unknown` | Represents an unknown key |
+| `LastKey` | The last recognized key in the enumeration |
+
+**Example:**
+
+```csharp
+// Check for letter key
+if (Input.IsKeyPressed(KeyboardKey.W)) {
+    player.MoveForward();
+}
+
+// Check for modifier key combination
+if (Input.IsKeyDown(KeyboardKey.ControlLeft) && Input.IsKeyPressed(KeyboardKey.S)) {
+    SaveGame();
+}
+
+// Check for function key
+if (Input.IsKeyPressed(KeyboardKey.F1)) {
+    ShowHelp();
+}
+
+// Check for numeric keypad
+if (Input.IsKeyPressed(KeyboardKey.Keypad5)) {
+    SelectItem();
+}
+```
+
+---
+
+## Text Input
+
+### GetTypedText
+
+```csharp
+public static bool GetTypedText(out string text)
+```
+
+Retrieves any text that was typed since the last frame, but only while text input is active via `EnableTextInput()`.
+
+**Parameters:**
+- `text` — The typed text collected since the previous frame. Will be empty if no text was entered
+
+**Returns:** `true` if any text was entered; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.GetTypedText(out string typedText)) {
+    searchBox.Text += typedText;
+}
+```
+
+---
+
+### IsTextInputActive
+
+```csharp
+public static bool IsTextInputActive()
+```
+
+Determines whether text input mode is currently active.
+
+**Returns:** `true` if text input is active; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (!Input.IsTextInputActive()) {
+    Input.EnableTextInput();
+}
+```
+
+---
+
+### EnableTextInput
+
+```csharp
+public static void EnableTextInput()
+```
+
+Activates text input mode, allowing the application to receive typed text events.
+
+**Example:**
+
+```csharp
+public void OnUIFocused() {
+    Input.EnableTextInput();
+}
+```
+
+---
+
+### DisableTextInput
+
+```csharp
+public static void DisableTextInput()
+```
+
+Disable the text input process, ending any active text input session.
+
+**Example:**
+
+```csharp
+public void OnUIBlurred() {
+    Input.DisableTextInput();
+}
+```
+
+---
+
+## Related Documentation
+
+- [Overview](/api-reference/input/overview.mdx)
+- [Mouse Input](/api-reference/input/mouse.mdx)
+- [Gamepad Input](/api-reference/input/gamepad.mdx)
+- [Files & Clipboard](/api-reference/input/file-clipboard.mdx)

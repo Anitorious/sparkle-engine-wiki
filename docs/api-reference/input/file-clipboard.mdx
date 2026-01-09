@@ -1,0 +1,98 @@
+---
+title: Files & Clipboard
+description: File drop and clipboard access functionality
+sidebar_position: 5
+---
+
+# Files & Clipboard
+
+Access and manage system clipboard contents and handle file drops in your application.
+
+---
+
+- **Namespace:** Bliss.CSharp.Interact
+- **Type:** `static class`
+
+---
+
+## Features
+
+The file and clipboard functionality provides:
+
+- **Clipboard access** — Read and write to the system clipboard
+- **File drag-drop** — Detect files dragged and dropped onto the window
+
+## Clipboard Access
+
+### GetClipboardText
+
+```csharp
+public static string GetClipboardText()
+```
+
+Retrieves the current text from the system clipboard via the InputContext.
+
+**Returns:** The current clipboard text
+
+**Example:**
+
+```csharp
+var clipboardText = Input.GetClipboardText();
+chatBox.Text = clipboardText;
+```
+
+---
+
+### SetClipboardText
+
+```csharp
+public static void SetClipboardText(string text)
+```
+
+Sets the clipboard content to the specified text.
+
+**Parameters:**
+- `text` — The text to set to the clipboard
+
+**Example:**
+
+```csharp
+Input.SetClipboardText(player.Name);
+// User can now paste their name elsewhere
+```
+
+---
+
+## File Operations
+
+### IsFileDragDropped
+
+```csharp
+public static bool IsFileDragDropped(out string path)
+```
+
+Determines whether a file has been drag-dropped onto the application.
+
+**Parameters:**
+- `path` — The path of the drag-dropped file, if one exists
+
+**Returns:** `true` if a file was drag-dropped; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsFileDragDropped(out var filePath)) {
+    if (filePath.EndsWith(".msgpack")) {
+        LoadScene(filePath);
+    }
+}
+```
+
+---
+
+## Related Documentation
+
+- [Overview](/api-reference/input/overview.mdx)
+- [Keyboard Input](/api-reference/input/keyboard.mdx)
+- [Mouse Input](/api-reference/input/mouse.mdx)
+- [Gamepad Input](/api-reference/input/gamepad.mdx)

@@ -1,0 +1,334 @@
+---
+title: GameSettings
+description: Configuration struct for initializing game window, graphics, and timing settings
+sidebar_position: 2
+---
+
+# GameSettings
+
+The `GameSettings` struct provides a configuration object for initializing core game settings including window properties, graphics backend, and timing parameters.
+
+:::note
+
+`GameSettings` is typically passed to the `Game` class constructor to configure the application before startup. It uses init-only properties for immutability and provides sensible defaults for all settings.
+
+:::
+
+---
+
+- **Namespace:** Sparkle.CSharp
+- **Type:** `struct`
+
+---
+
+## Features
+
+The `GameSettings` struct provides configuration for:
+
+- **Window setup** — Title, dimensions, icon, and window state flags
+- **Graphics configuration** — Backend selection, VSync, and anti-aliasing settings
+- **Timing control** — Target FPS and fixed time step for physics
+- **Logging** — Directory path for application logs
+
+## Usage
+
+```csharp
+using Sparkle.CSharp;
+
+var settings = new GameSettings {
+    Title = "My Game",
+    Width = 1920,
+    Height = 1080,
+    TargetFps = 60,
+    VSync = true
+};
+
+var game = new Game(settings);
+game.Run();
+```
+
+:::info
+
+`GameSettings` uses init-only properties, meaning values can only be set during object initialization. All properties have sensible default values, so you only need to override the settings you want to change.
+
+The default graphics backend is automatically selected based on the platform (Direct3D on Windows, Metal on macOS, Vulkan or OpenGL on Linux).
+
+:::
+
+---
+
+## Properties
+
+### Title
+
+```csharp
+public string Title { get; init; }
+```
+
+The title displayed in the game window's title bar.
+
+**Type:** `string`
+
+**Default:** Assembly name of the entry point assembly, or `"Sparkle"` if unavailable
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    Title = "Project Dutchman"
+};
+```
+
+---
+
+### Width
+
+```csharp
+public int Width { get; init; }
+```
+
+The width of the game window in pixels.
+
+**Type:** `int`
+
+**Default:** `1280`
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    Width = 1920
+};
+```
+
+---
+
+### Height
+
+```csharp
+public int Height { get; init; }
+```
+
+The height of the game window in pixels.
+
+**Type:** `int`
+
+**Default:** `720`
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    Height = 1080
+};
+```
+
+---
+
+### IconPath
+
+```csharp
+public string IconPath { get; init; }
+```
+
+The file path to the icon image used for the game window. Leave empty to use the default window icon.
+
+**Type:** `string`
+
+**Default:** `string.Empty`
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    IconPath = "content/icons/game_icon.png"
+};
+```
+
+---
+
+### LogDirectory
+
+```csharp
+public string LogDirectory { get; init; }
+```
+
+The directory path where application log files will be written.
+
+**Type:** `string`
+
+**Default:** `"logs"`
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    LogDirectory = "logs/application"
+};
+```
+
+---
+
+### TargetFps
+
+```csharp
+public int TargetFps { get; init; }
+```
+
+The target frames per second (FPS) for the game loop. A value of `0` means no FPS cap (unlimited frame rate).
+
+**Type:** `int`
+
+**Default:** `0`
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    TargetFps = 60  // Cap at 60 FPS
+};
+```
+
+---
+
+### FixedTimeStep
+
+```csharp
+public float FixedTimeStep { get; init; }
+```
+
+The fixed time step interval used for physics calculations and fixed-rate updates, in seconds.
+
+**Type:** `float`
+
+**Default:** `1.0F / 60.0F` (approximately `0.0167` seconds)
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    FixedTimeStep = 1.0F / 120.0F  // Physics at 120 Hz
+};
+```
+
+---
+
+### WindowFlags
+
+```csharp
+public WindowState WindowFlags { get; init; }
+```
+
+Flags that define the behavior and appearance of the game window, such as resizable, fullscreen, or borderless.
+
+**Type:** `WindowState` (from Bliss.CSharp.Windowing)
+
+**Default:** `WindowState.Resizable`
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    WindowFlags = WindowState.Fullscreen | WindowState.Borderless
+};
+```
+
+---
+
+### Backend
+
+```csharp
+public GraphicsBackend Backend { get; init; }
+```
+
+The graphics API backend to use for rendering. Options include Direct3D, Vulkan, Metal, OpenGL, and OpenGL-ES.
+
+**Type:** `GraphicsBackend` (from Veldrid)
+
+**Default:** Platform default (Direct3D on Windows, Metal on macOS, Vulkan or OpenGL on Linux)
+
+**Example:**
+
+```csharp
+using Veldrid;
+
+var settings = new GameSettings {
+    Backend = GraphicsBackend.Vulkan
+};
+```
+
+---
+
+### VSync
+
+```csharp
+public bool VSync { get; init; }
+```
+
+Indicates whether vertical synchronization (VSync) is enabled. When enabled, the game will sync to the monitor's refresh rate to prevent screen tearing.
+
+**Type:** `bool`
+
+**Default:** `true`
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    VSync = false  // Allow frame rates above monitor refresh
+};
+```
+
+---
+
+### SampleCount
+
+```csharp
+public TextureSampleCount SampleCount { get; init; }
+```
+
+The sample count for anti-aliasing (MSAA). Higher values result in smoother edges but increase GPU load. Valid values are typically 1, 2, 4, 8, or 16.
+
+**Type:** `TextureSampleCount` (from Veldrid)
+
+**Default:** `TextureSampleCount.Count1` (no anti-aliasing)
+
+**Example:**
+
+```csharp
+using Veldrid;
+
+var settings = new GameSettings {
+    SampleCount = TextureSampleCount.Count4  // 4x MSAA
+};
+```
+
+---
+
+## Methods
+
+### GameSettings()
+
+```csharp
+public GameSettings()
+```
+
+Initializes a new instance of the `GameSettings` struct with default values.
+
+**Example:**
+
+```csharp
+var settings = new GameSettings(); // All defaults
+
+var customSettings = new GameSettings {
+    Width = 1920,
+    Height = 1080,
+    TargetFps = 60
+};
+```
+
+---
+
+## Related Documentation
+
+- [Window State](/api-reference/window-state.mdx)

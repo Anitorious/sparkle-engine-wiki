@@ -1,0 +1,460 @@
+---
+title: Mouse
+description: Mouse input handling including position, movement, scrolling, and button states
+sidebar_position: 3
+---
+
+# Mouse Input
+
+Handle mouse input including cursor position, movement, button presses, and scrolling.
+
+---
+
+- **Namespace:** Bliss.CSharp.Interact
+- **Type:** `static class`
+
+---
+
+## Features
+
+The mouse input functionality provides:
+
+- **Cursor control** — Show, hide, and set custom cursors
+- **Position tracking** — Get current position and movement delta
+- **Button states** — Query mouse button press, hold, and release states
+- **Scroll detection** — Detect mouse wheel movement
+- **Relative mouse mode** — Lock cursor for first-person games
+
+## Cursor Management
+
+### IsCursorShown
+
+```csharp
+public static bool IsCursorShown()
+```
+
+Checks if the cursor is currently shown.
+
+**Returns:** `true` if the cursor is shown; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsCursorShown()) {
+    // Cursor is visible
+}
+```
+
+---
+
+### ShowCursor
+
+```csharp
+public static void ShowCursor()
+```
+
+Shows the mouse cursor.
+
+**Example:**
+
+```csharp
+public void OnGamePaused() {
+    Input.ShowCursor();
+}
+```
+
+---
+
+### HideCursor
+
+```csharp
+public static void HideCursor()
+```
+
+Hides the mouse cursor.
+
+**Example:**
+
+```csharp
+public void OnGameResumed() {
+    Input.HideCursor();
+}
+```
+
+---
+
+### GetMouseCursor
+
+```csharp
+public static ICursor GetMouseCursor()
+```
+
+Gets the current mouse cursor from the input context.
+
+**Returns:** The current `ICursor` instance
+
+**Example:**
+
+```csharp
+var currentCursor = Input.GetMouseCursor();
+```
+
+---
+
+### SetMouseCursor
+
+```csharp
+public static void SetMouseCursor(ICursor cursor)
+```
+
+Sets the mouse cursor to the specified cursor.
+
+**Parameters:**
+- `cursor` — The cursor to set
+
+**Example:**
+
+```csharp
+Input.SetMouseCursor(handCursor);
+```
+
+---
+
+## Relative Mouse Mode
+
+### IsRelativeMouseModeEnabled
+
+```csharp
+public static bool IsRelativeMouseModeEnabled()
+```
+
+Checks if relative mouse mode is enabled, where the cursor is locked to the window.
+
+**Returns:** `true` if relative mouse mode is enabled; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (!Input.IsRelativeMouseModeEnabled()) {
+    Input.EnableRelativeMouseMode();
+}
+```
+
+---
+
+### EnableRelativeMouseMode
+
+```csharp
+public static void EnableRelativeMouseMode()
+```
+
+Enables relative mouse mode, which locks the cursor to the center of the window and provides relative motion data instead of absolute position. Useful for first-person games.
+
+**Example:**
+
+```csharp
+public void EnterFirstPersonMode() {
+    Input.EnableRelativeMouseMode();
+    Input.HideCursor();
+}
+```
+
+---
+
+### DisableRelativeMouseMode
+
+```csharp
+public static void DisableRelativeMouseMode()
+```
+
+Disables the relative mouse mode.
+
+**Example:**
+
+```csharp
+public void ExitFirstPersonMode() {
+    Input.DisableRelativeMouseMode();
+    Input.ShowCursor();
+}
+```
+
+---
+
+## Position & Movement
+
+### GetMousePosition
+
+```csharp
+public static Vector2 GetMousePosition()
+```
+
+Gets the current position of the mouse in window coordinates.
+
+**Returns:** A `Vector2` representing the mouse position
+
+**Example:**
+
+```csharp
+var mousePos = Input.GetMousePosition();
+if (uiButton.Bounds.Contains(mousePos)) {
+    uiButton.OnHover();
+}
+```
+
+---
+
+### GetMouseDelta
+
+```csharp
+public static Vector2 GetMouseDelta()
+```
+
+Retrieves the change in mouse position since the last frame.
+
+**Returns:** A `Vector2` representing the delta of the mouse movement
+
+**Example:**
+
+```csharp
+var mouseDelta = Input.GetMouseDelta();
+camera.Yaw += mouseDelta.X * sensitivity;
+camera.Pitch += mouseDelta.Y * sensitivity;
+```
+
+---
+
+### SetMousePosition
+
+```csharp
+public static void SetMousePosition(Vector2 position)
+```
+
+Sets the mouse position to the specified coordinates.
+
+**Parameters:**
+- `position` — The position to set the mouse to
+
+**Example:**
+
+```csharp
+// Center cursor on screen
+Input.SetMousePosition(new Vector2(screenWidth / 2, screenHeight / 2));
+```
+
+---
+
+### IsMouseMoving
+
+```csharp
+public static bool IsMouseMoving(out Vector2 position)
+```
+
+Checks if the mouse is currently moving and provides its position.
+
+**Parameters:**
+- `position` — The current position of the mouse if it is moving
+
+**Returns:** `true` if the mouse is moving; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsMouseMoving(out var pos)) {
+    OnMouseMove(pos);
+}
+```
+
+---
+
+## Button States
+
+### IsMouseButtonPressed
+
+```csharp
+public static bool IsMouseButtonPressed(MouseButton button)
+```
+
+Checks if the specified mouse button was pressed in the current frame.
+
+**Parameters:**
+- `button` — The mouse button to check (see [`MouseButton`](#mousebutton))
+
+**Returns:** `true` if the button was pressed; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsMouseButtonPressed(MouseButton.Left)) {
+    world.Raycast(Input.GetMousePosition());
+}
+```
+
+---
+
+### IsMouseButtonDown
+
+```csharp
+public static bool IsMouseButtonDown(MouseButton button)
+```
+
+Checks if the specified mouse button is currently being pressed down.
+
+**Parameters:**
+- `button` — The mouse button to check (see [`MouseButton`](#mousebutton))
+
+**Returns:** `true` if the button is down; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsMouseButtonDown(MouseButton.Left)) {
+    dragUI.UpdatePosition(Input.GetMousePosition());
+}
+```
+
+---
+
+### IsMouseButtonReleased
+
+```csharp
+public static bool IsMouseButtonReleased(MouseButton button)
+```
+
+Checks if the specified mouse button was released in the current frame.
+
+**Parameters:**
+- `button` — The mouse button to check for release (see [`MouseButton`](#mousebutton))
+
+**Returns:** `true` if the button was released; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsMouseButtonReleased(MouseButton.Left)) {
+    dragUI.OnDragEnd();
+}
+```
+
+---
+
+### IsMouseButtonUp
+
+```csharp
+public static bool IsMouseButtonUp(MouseButton button)
+```
+
+Checks if the specified mouse button is currently up (not pressed).
+
+**Parameters:**
+- `button` — The mouse button to check (see [`MouseButton`](#mousebutton))
+
+**Returns:** `true` if the button is up; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsMouseButtonUp(MouseButton.Right)) {
+    contextMenu.Close();
+}
+```
+
+---
+
+### IsMouseButtonDoubleClicked
+
+```csharp
+public static bool IsMouseButtonDoubleClicked(MouseButton button)
+```
+
+Checks if the specified mouse button was double-clicked during the current frame.
+
+**Parameters:**
+- `button` — The mouse button to check for a double-click event (see [`MouseButton`](#mousebutton))
+
+**Returns:** `true` if the specified mouse button was double-clicked; otherwise, `false`
+
+**Example:**
+
+```csharp
+if (Input.IsMouseButtonDoubleClicked(MouseButton.Left)) {
+    inventory.SelectItem();
+}
+```
+
+---
+
+### MouseButton
+
+An enumeration representing all available mouse buttons for input detection.
+
+#### **Members**
+
+| Button | Value | Description |
+|--------|-------|-------------|
+| `Left` | 1 | The left mouse button, typically used for primary interactions |
+| `Middle` | 2 | The middle mouse button, usually the scroll wheel button |
+| `Right` | 3 | The right mouse button, typically used for secondary interactions and context menus |
+| `X1` | 4 | The first extra (X1) mouse button, commonly found on gaming mice |
+| `X2` | 5 | The second extra (X2) mouse button, commonly found on gaming mice |
+
+**Example:**
+
+```csharp
+// Check for left mouse button click
+if (Input.IsMouseButtonPressed(MouseButton.Left)) {
+    HandleLeftClick();
+}
+
+// Check for right mouse button click
+if (Input.IsMouseButtonPressed(MouseButton.Right)) {
+    ShowContextMenu();
+}
+
+// Check for middle mouse button
+if (Input.IsMouseButtonPressed(MouseButton.Middle)) {
+    HandleMiddleClick();
+}
+
+// Check for extra mouse buttons
+if (Input.IsMouseButtonPressed(MouseButton.X1)) {
+    HandleBackButton();
+}
+
+if (Input.IsMouseButtonPressed(MouseButton.X2)) {
+    HandleForwardButton();
+}
+```
+
+---
+
+## Scrolling
+
+### IsMouseScrolling
+
+```csharp
+public static bool IsMouseScrolling(out Vector2 wheelDelta)
+```
+
+Checks if the mouse is currently scrolling and retrieves the wheel delta if it is.
+
+**Parameters:**
+- `wheelDelta` — The vector representing the scroll delta of the mouse
+
+**Returns:** `true` if the mouse is scrolling, otherwise `false`
+
+**Example:**
+
+```csharp
+if (Input.IsMouseScrolling(out var wheelDelta)) {
+    camera.Zoom -= wheelDelta.Y * zoomSensitivity;
+}
+```
+
+---
+
+## Related Documentation
+
+- [Overview](/api-reference/input/overview.mdx)
+- [Keyboard Input](/api-reference/input/keyboard.mdx)
+- [Gamepad Input](/api-reference/input/gamepad.mdx)
+- [Files & Clipboard](/api-reference/input/file-clipboard.mdx)

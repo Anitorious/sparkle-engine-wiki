@@ -6,7 +6,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
   title: "💫 Sparkle Engine",
-  tagline: "A fast, cross-platform .NET 8 C# 12 game engine.",
+  tagline: "A fast, cross-platform .NET 10 C# 14 game engine.",
   favicon: "img/sparkle-logo.png",
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future

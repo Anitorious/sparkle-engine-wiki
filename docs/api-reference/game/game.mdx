@@ -1,0 +1,660 @@
+---
+title: Game
+description: Core game class that manages the game loop, rendering, input, and lifecycle
+sidebar_position: 1
+---
+
+# Game
+
+The `Game` class is the core component of the Sparkle engine that manages the game loop, window initialization, graphics rendering, input processing, and the lifecycle of all major game systems including scenes, overlays, and the GUI.
+
+:::note
+
+`Game` is the central entry point for most Sparkle applications. It extends `Disposable` and provides virtual methods that can be overridden to implement custom game logic at various points in the application lifecycle.
+
+:::
+
+---
+
+- **Namespace:** Sparkle.CSharp
+- **Type:** `public class`
+
+---
+
+## Features
+
+The `Game` class manages:
+
+- **Game loop** — Main update and render loop with fixed timestep support
+- **Window management** — Window creation and lifecycle
+- **Graphics system** — Graphics device, command lists, and rendering pipeline
+- **Input handling** — Input context initialization and frame synchronization
+- **Asset management** — Content loading and registry management
+- **Scene management** — Scene loading, updating, and rendering
+- **Audio system** — Audio context initialization and updates
+- **UI & Overlays** — GUI and overlay manager integration
+
+## Usage
+
+```csharp
+using Sparkle.CSharp;
+
+var settings = new GameSettings {
+    Title = "My Game",
+    Width = 1920,
+    Height = 1080,
+    TargetFps = 60
+};
+
+var game = new Game(settings);
+game.Run(new MyScene());
+```
+
+:::info
+
+The `Game` class automatically calls handles window events, input, manages all rendering to a render target with MSAA support, and coordinates updates across all game systems.
+
+If you derive from `Game`, you can override virtual methods like `OnRun()`, `Load()`, `Update()`, `FixedUpdate()`, and `Draw()` to customize game behavior.
+
+:::
+
+---
+
+## Properties
+
+### Version
+
+```csharp
+public static readonly Version Version
+```
+
+The version of the Sparkle game engine.
+
+**Type:** `Version`
+
+**Value:** `5.0.0`
+
+**Example:**
+
+```csharp
+Console.WriteLine($"Sparkle Engine Version: {Game.Version}");
+```
+
+---
+
+### Instance
+
+```csharp
+public static Game? Instance { get; private set; }
+```
+
+The singleton instance of the currently running game. Set automatically when a `Game` is constructed.
+
+**Type:** `Game?`
+
+**Example:**
+
+```csharp
+var currentGame = Game.Instance;
+if (currentGame != null) {
+    currentGame.SetTargetFps(120);
+}
+```
+
+---
+
+### Settings
+
+```csharp
+public GameSettings Settings { get; private set; }
+```
+
+The game settings provided during initialization. Contains window configuration, graphics backend selection, and timing parameters. (see [`GameSettings`](api-reference/game-settings.md))
+
+
+**Type:** `GameSettings`
+
+**Example:**
+
+```csharp
+var title = Game.Instance.Settings.Title;
+var targetFps = Game.Instance.Settings.TargetFps;
+```
+
+---
+
+### MainWindow
+
+```csharp
+public IWindow MainWindow { get; private set; }
+```
+
+The main game window. Provides access to window properties and event handling.
+
+**Type:** `IWindow`
+
+**Example:**
+
+```csharp
+var width = Game.Instance.MainWindow.GetWidth();
+var height = Game.Instance.MainWindow.GetHeight();
+```
+
+---
+
+### GraphicsDevice
+
+```csharp
+public GraphicsDevice GraphicsDevice { get; private set; }
+```
+
+The Veldrid graphics device used for all rendering operations.
+
+**Type:** `GraphicsDevice` (from Veldrid)
+
+**Example:**
+
+```csharp
+var deviceName = Game.Instance.GraphicsDevice.DeviceName;
+var backendType = Game.Instance.GraphicsDevice.BackendType;
+```
+
+---
+
+### CommandList
+
+```csharp
+public CommandList CommandList { get; private set; }
+```
+
+The Veldrid command list used to record graphics commands for rendering.
+
+**Type:** `CommandList` (from Veldrid)
+
+**Example:**
+
+```csharp
+var commandList = Game.Instance.CommandList;
+```
+
+---
+
+### FullScreenRenderPass
+
+```csharp
+public FullScreenRenderer FullScreenRenderPass { get; private set; }
+```
+
+The full-screen renderer used to display the render target texture to the swapchain.
+
+**Type:** `FullScreenRenderer`
+
+**Example:**
+
+```csharp
+var renderer = Game.Instance.FullScreenRenderPass;
+```
+
+---
+
+### GlobalSpriteBatch
+
+```csharp
+public SpriteBatch GlobalSpriteBatch { get; private set; }
+```
+
+The global sprite batch used for rendering 2D sprites throughout the application.
+
+**Type:** `SpriteBatch`
+
+**Example:**
+
+```csharp
+Game.Instance.GlobalSpriteBatch.DrawString(font, "Hello World", position);
+```
+
+---
+
+### GlobalPrimitiveBatch
+
+```csharp
+public PrimitiveBatch GlobalPrimitiveBatch { get; private set; }
+```
+
+The global primitive batch used for rendering 2D geometric primitives (lines, circles, rectangles, etc.).
+
+**Type:** `PrimitiveBatch`
+
+**Example:**
+
+```csharp
+Game.Instance.GlobalPrimitiveBatch.DrawRectangle(rect, Color.Red);
+```
+
+---
+
+### GlobalImmediateRenderer
+
+```csharp
+public ImmediateRenderer GlobalImmediateRenderer { get; private set; }
+```
+
+The global immediate renderer used for immediate-mode rendering of vertices and custom geometry.
+
+**Type:** `ImmediateRenderer`
+
+**Example:**
+
+```csharp
+var renderer = Game.Instance.GlobalImmediateRenderer;
+```
+
+---
+
+### GraphicsContext
+
+```csharp
+public GraphicsContext GraphicsContext { get; private set; }
+```
+
+An instance encapsulating all core graphics rendering components (device, command list, renderers, and batches).
+
+**Type:** `GraphicsContext`
+
+**Example:**
+
+```csharp
+var context = Game.Instance.GraphicsContext;
+```
+
+---
+
+### Content
+
+```csharp
+public ContentManager Content { get; private set; }
+```
+
+The content manager used to load game assets such as textures, models, fonts, and audio.
+
+**Type:** `ContentManager`
+
+**Example:**
+
+```csharp
+var texture = Game.Instance.Content.Load(new TextureContent("path/to/texture.png"));
+```
+
+---
+
+### ShouldClose
+
+```csharp
+public bool ShouldClose
+```
+
+Flag indicating whether the game loop should terminate. Set to `true` to gracefully shut down the game.
+
+**Type:** `bool`
+
+**Example:**
+
+```csharp
+if (Input.IsKeyPressed(KeyboardKey.Escape)) {
+    Game.Instance.ShouldClose = true;
+}
+```
+
+---
+
+## Methods
+
+### Constructor
+
+```csharp
+public Game(GameSettings settings)
+```
+
+Initializes a new instance of the `Game` class with the specified settings.
+
+**Parameters:**
+- `settings` — The `GameSettings` object containing window, graphics, and timing configuration
+
+**Example:**
+
+```csharp
+var settings = new GameSettings {
+    Title = "My Game",
+    Width = 1920,
+    Height = 1080,
+    TargetFps = 60,
+    VSync = true
+};
+
+var game = new Game(settings);
+```
+
+---
+
+### Run
+
+```csharp
+public void Run(Scene? scene)
+```
+
+Starts the game loop, initializing all necessary components and running the game until shutdown.
+
+This method:
+1. Initializes logging
+2. Creates the window and graphics device
+3. Sets up input, audio, and graphics systems
+4. Loads content via `Load()`
+5. Initializes resources via `Init()`
+6. Runs the main game loop with fixed timestep support
+7. Handles cleanup on shutdown
+
+**Parameters:**
+- `scene` — The initial scene to load when the game starts (can be `null`)
+
+**Example:**
+
+```csharp
+var game = new Game(settings);
+game.Run(new GameScene());
+```
+
+---
+
+### SetTargetFps
+
+```csharp
+public void SetTargetFps(int fps)
+```
+
+Sets the target frames per second. A value of `0` means unlimited frame rate.
+
+**Parameters:**
+- `fps` — The target FPS value (0 = unlimited)
+
+**Example:**
+
+```csharp
+Game.Instance.SetTargetFps(60);
+```
+
+---
+
+### GetTargetFps
+
+```csharp
+public int GetTargetFps()
+```
+
+Gets the current target frames per second setting.
+
+**Returns:** The target FPS value (0 = unlimited)
+
+**Example:**
+
+```csharp
+var currentTargetFps = Game.Instance.GetTargetFps();
+```
+
+---
+
+### SetSampleCount
+
+```csharp
+public void SetSampleCount(TextureSampleCount sampleCount)
+```
+
+Sets the sample count for multi-sample anti-aliasing (MSAA). This changes the anti-aliasing level of the render target.
+
+**Parameters:**
+- `sampleCount` — The texture sample count (1, 2, 4, 8, 16, etc.)
+
+**Example:**
+
+```csharp
+Game.Instance.SetSampleCount(TextureSampleCount.Count4); // 4x MSAA
+```
+
+---
+
+### GetSampleCount
+
+```csharp
+public TextureSampleCount? GetSampleCount()
+```
+
+Retrieves the texture sample count currently used by the game's MSAA render target.
+
+**Returns:** The sample count of the render target, or `null` if not available
+
+**Example:**
+
+```csharp
+var sampleCount = Game.Instance.GetSampleCount();
+if (sampleCount == TextureSampleCount.Count4) {
+    // 4x MSAA is enabled
+}
+```
+
+---
+
+## Virtual Methods (Overridable)
+
+These methods can be overridden in derived classes to implement custom game logic:
+
+### OnRun
+
+```csharp
+protected virtual void OnRun()
+```
+
+Called when the game starts, before the game loop begins. Use this for additional setup when the game initializes.
+
+**Example:**
+
+```csharp
+protected override void OnRun() {
+    Logger.Info("Game is starting!");
+}
+```
+
+---
+
+### Load
+
+```csharp
+protected virtual void Load(ContentManager content)
+```
+
+Loads required game content and resources. Called before the first frame. Registries are automatically loaded before this method.
+
+**Parameters:**
+- `content` — The content manager to load assets with
+
+**Example:**
+
+```csharp
+protected override void Load(ContentManager content) {
+    base.Load(content);
+    // Load your game content here
+}
+```
+
+---
+
+### Init
+
+```csharp
+protected virtual void Init()
+```
+
+Initializes global game resources after content loading. Called after `Load()` completes.
+
+**Example:**
+
+```csharp
+protected override void Init() {
+    base.Init();
+    // Initialize your game systems here
+}
+```
+
+---
+
+### Update
+
+```csharp
+protected virtual void Update(double delta)
+```
+
+Updates the game state, including scene and UI management. Called every frame with variable delta time.
+
+**Parameters:**
+- `delta` — The time delta since the last update in seconds
+
+**Example:**
+
+```csharp
+protected override void Update(double delta) {
+    base.Update(delta);
+    // Update game logic here
+}
+```
+
+---
+
+### AfterUpdate
+
+```csharp
+protected virtual void AfterUpdate(double delta)
+```
+
+Final update after regular updates are completed. Useful for cleanup or post-processing logic.
+
+**Parameters:**
+- `delta` — The time delta since the last update in seconds
+
+**Example:**
+
+```csharp
+protected override void AfterUpdate(double delta) {
+    base.AfterUpdate(delta);
+    // Post-update logic here
+}
+```
+
+---
+
+### FixedUpdate
+
+```csharp
+protected virtual void FixedUpdate(double fixedStep)
+```
+
+Executes fixed update logic with a constant time step. Ideal for physics calculations and deterministic updates.
+
+**Parameters:**
+- `fixedStep` — The fixed time step in seconds (default: 1/60)
+
+**Example:**
+
+```csharp
+protected override void FixedUpdate(double fixedStep) {
+    base.FixedUpdate(fixedStep);
+    // Physics and fixed-rate logic here
+}
+```
+
+---
+
+### Draw
+
+```csharp
+protected virtual void Draw(GraphicsContext context, Framebuffer framebuffer)
+```
+
+Renders the game scene to the screen. Called every frame after updates.
+
+**Parameters:**
+- `context` — The graphics context containing renderers and batches
+- `framebuffer` — The render target framebuffer to draw to
+
+**Example:**
+
+```csharp
+protected override void Draw(GraphicsContext context, Framebuffer framebuffer) {
+    base.Draw(context, framebuffer);
+    // Custom drawing code here
+}
+```
+
+---
+
+### OnResize
+
+```csharp
+protected virtual void OnResize(Rectangle rectangle)
+```
+
+Handles window resizing events. Called when the user resizes the window. Automatically resizes the swapchain and render target.
+
+**Parameters:**
+- `rectangle` — The new window dimensions and position
+
+**Example:**
+
+```csharp
+protected override void OnResize(Rectangle rectangle) {
+    base.OnResize(rectangle);
+    // Custom resize handling here
+}
+```
+
+---
+
+### OnClose
+
+```csharp
+protected virtual void OnClose()
+```
+
+Handles cleanup logic when the application shuts down. Called before resources are disposed.
+
+**Example:**
+
+```csharp
+protected override void OnClose() {
+    Logger.Info("Game is closing!");
+    // Custom shutdown logic here
+}
+```
+
+---
+
+## Game Loop Execution Order
+
+The game loop executes in this order each frame:
+
+1. **Time update** — `Time.Update()`
+2. **Window events** — `MainWindow.PumpEvents()`
+3. **Input** — `Input.Begin()`
+4. **Audio** — `AudioContext.Update()`
+5. **Update** — `Update(delta)`
+6. **After Update** — `AfterUpdate(delta)`
+7. **Fixed Updates** — `FixedUpdate(fixedStep)` (may run 0 or more times)
+8. **Rendering** — `Draw(context, framebuffer)`
+9. **Input End** — `Input.End()`
+
+---
+
+## Related Documentation
+
+- [GameSettings](/api-reference/gamesettings.mdx)
+- [WindowState](/api-reference/windowstate.mdx)
+- [Input System](/api-reference/input/overview.mdx)
+- [Content Manager](/api-reference/content-manager.mdx)
+- [Scene System](/api-reference/scenes.mdx)
